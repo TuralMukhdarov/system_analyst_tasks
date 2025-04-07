@@ -1,0 +1,26 @@
+@startuml qwe
+
+title "Обновление данных в пользовательском профиле"
+
+autonumber
+
+actor       "User"     as u
+participant "Front"    as c
+participant "Back"     as b
+database    "Database" as db
+
+u o-[#red]> c++ : Клиент открывает форму \nпрофиля пользовтаеля
+c -[#red]-> u : Форма профиля пользователя
+u -[#red]> c : Обновление значения поля в профиле
+opt "Ошибка валидации \nзначения в поле"
+    c --[#red]> u : Введенные данные неверные
+end
+c -[#SkyBlue]> b++ : Запрос в сервис
+note left: PATCH api/v1/user/{user_id}
+b -[#Green]> db++ : Запрос в БД
+db --[#Green]> db : 200 ok
+db --[#Green]> b-- : 200 ok
+b --[#SkyBlue]> c-- : 200 ok
+c --[#Red]> u-- : Клиент видит обновленные \nданные в профиле
+
+@enduml
